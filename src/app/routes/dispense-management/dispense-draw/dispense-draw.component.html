@@ -1,0 +1,8 @@
+<nz-drawer [nzMaskClosable]="false" [nzWidth]="500" [nzTitle]="title" (nzOnClose)="cancel()" [nzVisible]="visible">
+
+    <div>
+      <app-dispense-detail *ngIf="visible" [pageMode]="pageMode" [dispenseRecordDetail]="dispenseRecordDetail"
+        (visibleChange)="onVisibleChange($event)">
+      </app-dispense-detail>
+    </div>
+  </nz-drawer>

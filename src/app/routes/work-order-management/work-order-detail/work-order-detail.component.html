@@ -1,0 +1,242 @@
+<div>
+    <form nz-form [formGroup]="workOrderForm">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="barCode">{{'app.workorder.barcode' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="barcodeErrorTpl">
+          
+          <nz-tree-select style="width: 250px"
+            [(ngModel)]="value"
+            [nzNodes]="nodes"
+            (ngModelChange)="onChange($event)"
+            [nzShowSearch]="false"
+            [nzShowExpand]="false"
+            [nzDropdownStyle]="{ 'max-height': '300px' }"
+            nzCheckable
+            nzPlaceHolder="{{'app.workorder.lock.select.placeholder' | translate}}"
+            formControlName="barCode"
+            *ngIf="pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE"
+          >
+          </nz-tree-select>
+          <ng-template #barcodeErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">
+              {{'validation.workorder.barcode.required' | translate}}
+            </ng-container>
+          </ng-template>
+          <div *ngIf="pageMode == pageModeEnum.VIEW">
+              <a  *ngFor = " let item of value" (click)="viewLockAttachment(item)">{{item}} </a> 
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+        
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="owner">{{'app.workorder.owner' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="{{'validation.workorder.owner.required' | translate}}" >
+          <input nz-input formControlName="owner" id="owner"  *ngIf="pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE"/>
+          <div  *ngIf="pageMode == pageModeEnum.VIEW">
+            {{workOrderDetail.owner}}
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+        
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="carriera">{{'app.workorder.carriera' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="{{'validation.workorder.carriera.required' | translate}}">
+          <input nz-input formControlName="carriera" id="carriera"  *ngIf="pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE"/>
+          <div  *ngIf="pageMode == pageModeEnum.VIEW">
+            {{workOrderDetail.carriera}}
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="wayBillNumber">{{'app.workorder.waybillnumber' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="{{'validation.workorder.waybillnumber.required' | translate}}">
+          <input nz-input formControlName="wayBillNumber" id="wayBillNumber"  *ngIf="pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE"/>
+          <div  *ngIf="pageMode == pageModeEnum.VIEW">
+            {{workOrderDetail.wayBillNumber}}
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="transport">{{'app.workorder.transport' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="transportErrorTpl">
+          <nz-tag  *ngFor="let tag of transportags" (nzAfterClose)="handleClose(tag)" nzMode= "closeable" >
+            {{tag.transprortId}}
+          </nz-tag>
+
+          <nz-tag *ngIf="!inputVisible && pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE" class="editable-tag" nzNoAnimation (click)="showInput()">
+            <i nz-icon nzType="plus"></i>
+          </nz-tag>
+          <input
+            #inputElement
+            nz-input
+            nzSize="small"
+            *ngIf="inputVisible"
+            type="text"
+            [(ngModel)]="inputValue"
+            formControlName="transport"
+            style="width: 78px;"
+            (blur)="handleInputConfirm()"
+            (keydown.enter)="handleInputConfirm()"
+          />
+
+          <ng-template #transportErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">
+              {{'validation.workorder.transport.required' | translate}}
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="startAddress">{{'app.workorder.start.address' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="{{'validation.workorder.startaddress.required' | translate}}">
+          <input nz-input formControlName="startAddress" id="startAddress"  *ngIf="pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE"/>
+          <div *ngIf="pageMode == pageModeEnum.VIEW">
+            {{startAddress}}
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="endAddress">{{'app.workorder.end.address' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="{{'validation.workorder.endaddress.required' | translate}}">
+          <input nz-input formControlName="endAddress" id="endAddress" *ngIf="pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE"/>
+          <div *ngIf="pageMode == pageModeEnum.VIEW">
+              {{endAddress}}
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="productDetail">{{'app.workorder.detail' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <textarea nz-input id="productDetail" formControlName="productDetail" *ngIf="pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE"></textarea>
+          <div *ngIf="pageMode == pageModeEnum.VIEW"> 
+              {{workOrderDetail.productDetail}}
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="attachment">{{'app.workorder.attachment' | translate}}
+          <span nzTooltipTitle="{{ 'app.workorder.attachment.tooltips' | translate}}" nzTooltipPlacement="top" nz-tooltip><i nz-icon nzType="question-circle" nzTheme="outline"></i></span>
+        </nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <div class="clearfix">
+            <nz-upload
+              nzAction="workorder/attachment"
+              nzListType="picture-card"
+              [(nzFileList)]="fileList"
+              [nzShowButton]="fileList.length < 1"
+              [nzShowUploadList]="showUploadList"
+              [nzSize] = 2048
+              [nzPreview]="handlePreview"
+              [nzDisabled]="pageMode == pageModeEnum.VIEW"
+            >
+              <i nz-icon nzType="plus" *ngIf="pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE"></i>
+              <div class="ant-upload-text">{{'app.workorder.attachment.upload' | translate}}</div>
+            </nz-upload>
+            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+              (nzOnCancel)="previewVisible = false && pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE"
+            >
+              <ng-template #modalContent>
+                <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+              </ng-template>
+            </nz-modal>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <app-bmap></app-bmap>
+
+      <div class="footer" style="padding-top: 16px;">
+        <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>{{'app.cancel'| translate}}</span></button>
+        <button type="button" (click)="save()" class="ant-btn ant-btn-primary" [disabled]="workOrderForm.invalid" *ngIf="pageMode == pageModeEnum.EDIT || pageMode == pageModeEnum.CREATE">
+            <span>{{'app.save'| translate}}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="sealInfoModalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #modalTitle>
+    电子封锁施封信息
+  </ng-template>
+
+  <ng-template #sealInfoModalContent>
+    <div>
+      <label>RFID: </label> {{lockSealInfo.rfid}} 
+    </div>
+    <div>
+      <label>序列号: </label> {{lockSealInfo.barCode}} 
+    </div>
+    <div>
+      <label>施封人：</label> {{lockSealInfo.lockAccountName}}
+    </div>
+    <div>
+      <label>锁定位置：</label> {{lockSealInfo.lockPosition}}
+    </div>
+    <div>
+      <label>车船号：</label> {{lockSealInfo.transportName}}
+    </div>
+    <div>
+      <label>施封现场照片：</label>
+
+      <div class="clearfix" *ngIf = "sealFileList.length > 0">
+        <nz-upload
+          nzAction=""
+          nzListType="picture-card"
+          [(nzFileList)]="sealFileList"
+          [nzShowButton]="sealFileList.length < 3"
+          [nzPreview]="handleSealPreview"
+          [nzOpenFileDialogOnClick] = false
+          [nzDisabled] = true
+        >
+        </nz-upload>
+        <nz-modal [nzVisible]="sealAttachmentPreviewVisible" [nzContent]="sealAttachmentmodalContent" [nzFooter]="null" (nzOnCancel)="sealAttachmentPreviewVisible = false">
+          <ng-template #sealAttachmentmodalContent>
+            <img [src]="sealAttachmentPreviewImage" [ngStyle]="{ width: '100%' }" />
+          </ng-template>
+        </nz-modal>
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>拆封人：</label> {{lockSealInfo.unLockAccountName}}
+      </div>
+      <div>
+        <label>拆封现场照片：</label>
+  
+        <div class="clearfix" *ngIf = "sealOffFileList.length > 0">
+          <nz-upload
+            nzAction=""
+            nzListType="picture-card"
+            [(nzFileList)]="sealOffFileList"
+            [nzShowButton]="sealOffFileList.length < 3"
+            [nzPreview]="handleSealPreview"
+            [nzOpenFileDialogOnClick] = false
+            [nzDisabled] = true
+          >
+          </nz-upload>
+          <nz-modal [nzVisible]="sealAttachmentPreviewVisible" [nzContent]="sealAttachmentmodalContent" [nzFooter]="null" (nzOnCancel)="sealAttachmentPreviewVisible = false">
+            <ng-template #sealAttachmentmodalContent>
+              <img [src]="sealAttachmentPreviewImage" [ngStyle]="{ width: '100%' }" />
+            </ng-template>
+          </nz-modal>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">关闭</button>
+  </ng-template>
+</nz-modal>

@@ -1,0 +1,9 @@
+<nz-drawer [nzMaskClosable]="false" [nzWidth]="500" [nzTitle]="title" (nzOnClose)="cancel()" [nzVisible]="visible">
+
+    <div>
+      <app-user-detail *ngIf="visible" [pageMode]="pageMode" [accountModel]="accountDetail"  (visibleChange)="onVisibleChange($event)">
+  
+      </app-user-detail>
+    </div>
+  </nz-drawer>
+  

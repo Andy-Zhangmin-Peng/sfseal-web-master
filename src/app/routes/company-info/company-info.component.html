@@ -1,0 +1,65 @@
+<div id="company-info">
+    <page-header title="{{'app.company.info' | translate}}"> </page-header>
+    <nz-card [nzBordered]="true" nzTitle="{{'app.company.detail' | translate}}">
+        <nz-row>
+            <nz-col nzSpan="16">
+                <form nz-form [formGroup]="companyForm">
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="7" nzRequired>{{'app.customer.name'| translate}}</nz-form-label>
+                      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="companyNameErrorTpl">
+                        <input nz-input formControlName="companyName" placeholder="Company Name" />
+                        <ng-template #companyNameErrorTpl let-control>
+                          <ng-container *ngIf="control.hasError('required')">
+                            {{'validation.customer.name.required'| translate}}
+                          </ng-container>
+                        </ng-template>
+                      </nz-form-control>
+                    </nz-form-item>
+            
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="7" nzRequired>{{'app.customer.phone'| translate}}</nz-form-label>
+                      <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="phoneNumberErrorTpl">
+                        <input nz-input formControlName="phoneNumber" placeholder="Company Phone Number" />
+                        <ng-template #phoneNumberErrorTpl let-control>
+                          <ng-container *ngIf="control.hasError('required')">
+                            {{'validation.customer.phone.required'| translate}}
+                          </ng-container>
+                        </ng-template>
+                      </nz-form-control>
+                    </nz-form-item>
+            
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="7" nzRequired>{{'app.customer.email'| translate}}</nz-form-label>
+                      <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+                        <input nz-input formControlName="email" placeholder="Company Email" />
+                        <ng-template #emailErrorTpl let-control>
+                          <ng-container *ngIf="control.hasError('required')">
+                            {{'validation.customer.email.required'| translate}}
+                          </ng-container>
+                        </ng-template>
+                      </nz-form-control>
+                    </nz-form-item>
+            
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="7" nzRequired>{{'app.customer.address'| translate}}</nz-form-label>
+                      <nz-form-control [nzSpan]="12" nzHasFeedback [nzErrorTip]="addressErrorTpl">
+                        <input nz-input formControlName="address" placeholder="Company Address" />
+                        <ng-template #addressErrorTpl let-control>
+                          <ng-container *ngIf="control.hasError('required')">
+                            {{'validation.customer.address.required'| translate}}
+                          </ng-container>
+                        </ng-template>
+                      </nz-form-control>
+                    </nz-form-item>
+            
+                    <nz-form-item>
+                      <nz-form-control [nzOffset]="7" [nzSpan]="12">
+                        <button nz-button nzType="primary" (click)="save()"
+                          [disabled]="companyForm.invalid">{{'app.company.update' | translate}}</button>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </form>
+            </nz-col>
+        </nz-row>
+    </nz-card>
+</div>

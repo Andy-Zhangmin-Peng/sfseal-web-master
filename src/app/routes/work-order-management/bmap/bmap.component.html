@@ -1,0 +1,5 @@
+<div style="height:300px;width:400px;">
+    <baidu-map [options]="opts" #map>
+        <marker *ngFor="let marker of markers" [point]="marker.point" [options]="marker.options"></marker>
+    </baidu-map>
+</div>

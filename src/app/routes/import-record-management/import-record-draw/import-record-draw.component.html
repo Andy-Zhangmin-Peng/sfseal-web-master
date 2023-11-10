@@ -1,0 +1,8 @@
+<nz-drawer [nzMaskClosable]="false" [nzWidth]="500" [nzTitle]="title" (nzOnClose)="cancel()" [nzVisible]="visible">
+
+    <div>
+      <app-import-record-detail *ngIf="visible" [pageMode]="pageMode" [importRecordDetail]="importRecordDetail" [rfidList] = "rfidList" 
+        (visibleChange)="onVisibleChange($event)">
+      </app-import-record-detail>
+    </div>
+  </nz-drawer>

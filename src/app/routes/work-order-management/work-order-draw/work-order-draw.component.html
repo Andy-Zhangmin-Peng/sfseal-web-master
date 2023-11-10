@@ -1,0 +1,9 @@
+<nz-drawer [nzMaskClosable]="false" [nzWidth]="500" [nzTitle]="title" (nzOnClose)="cancel()" [nzVisible]="visible">
+
+    <div>
+        <app-work-order-detail *ngIf="visible" [pageMode]="pageMode" [workOrderDetail]="workOrderDetail" (visibleChange)="onVisibleChange($event)"
+        [unusedLockList] = "unusedLockList">
+
+        </app-work-order-detail>
+    </div>
+</nz-drawer>

@@ -1,0 +1,7 @@
+<nz-drawer [nzMaskClosable]="false" [nzWidth]="500" [nzTitle]="title" (nzOnClose)="cancel()" [nzVisible]="visible">
+    <div>
+      <app-exceptional-situation-detail *ngIf="visible" [pageMode]="pageMode" [exceptionalSituationDetail]="exceptionalSituationDetail" (visibleChange)="onVisibleChange($event)">
+  
+      </app-exceptional-situation-detail>
+    </div>
+  </nz-drawer>

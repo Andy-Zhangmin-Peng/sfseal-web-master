@@ -1,0 +1,58 @@
+<div id="department-management">
+    <page-header title="{{ 'app.department.title' | translate }}"> </page-header>
+    <nz-card [nzBordered]="true" nzTitle="{{ 'app.department.list' | translate }}">
+        <nz-row>
+          <div style="padding-bottom: 12px;">
+            <button nz-button nzType="primary" (click)="createDepartment()">
+              <span>{{ 'app.department.add' | translate }}</span>
+            </button>
+          </div>
+    
+          <nz-table #departmentTable nzBordered nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfData"
+            [nzLoading]="loading" nzSize="middle" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="searchData()" (nzPageSizeChange)="searchData(true)">
+            <thead (nzSortChange)="sort($event)" nzSingleSort>
+              <tr>
+                <th nzCustomFilter nzWidth="240px">
+                  {{ 'app.department.name' | translate }}
+                  <i nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                    [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                    nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                </th>
+
+                <th nzShowSort nzWidth="200px" nzSortKey="mobile"><span>{{ 'app.department.phone' | translate }}</span></th>
+                <th nzShowSort nzWidth="200px"  nzSortKey="administrator"><span>{{ 'app.department.admin' | translate }}</span></th>
+                <th nzWidth="100px"><span>{{ 'app.action' | translate }}</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of departmentTable.data">
+                <td>{{ data.departmentName }}</td>
+                <td>{{ data.departmentPhoneNumber }}</td>
+                <td>{{ data.departmentAdministrator }}</td>
+                <td>
+                  <div class="editable-row-operations">
+                    <a (click)="openDetail(data)">{{ 'app.edit' | translate }}</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-row>
+      </nz-card>
+
+   <!-- 部门名称搜索框 -->
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div class="search-box">
+      <input type="text" nz-input placeholder="{{ 'app.department.search.placeholder' | translate }}" [(ngModel)]="searchValue" />
+      <button nz-button nzSize="small" nzType="primary" (click)="searchData()" class="search-button">
+        {{ 'app.save' | translate }}
+      </button>
+      <button nz-button nzSize="small" (click)="reset()">{{ 'app.reset' | translate }}</button>
+    </div>
+  </nz-dropdown-menu>
+
+  <app-department-draw [(visible)]="viewSidebar" [pageMode]="pageMode" [departmentDetail]="selectedDepartmentDetail" (visibleChange)="onVisibleChange($event)">
+  </app-department-draw>
+
+</div>

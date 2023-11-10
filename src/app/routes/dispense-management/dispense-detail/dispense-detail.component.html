@@ -1,0 +1,70 @@
+<div>
+    <form nz-form [formGroup]="dispenseRecordForm">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="dispenseRecordId">{{'app.dispense.id' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                {{dispenseRecordDetail.dispenseRecordId}}
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="companyName">{{'app.dispense.company' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" >
+            {{dispenseRecordDetail.companyName}}
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="dispenseDate">{{'app.dispense.date' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+              {{dispenseRecordDetail.createDate | date:'yyyy-MM-dd'}}
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="dispenseUser">{{'app.dispense.user' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            {{dispenseRecordDetail.lastUpdateUser}}
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="count">{{'app.dispense.count' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+              {{dispenseRecordDetail.dispenseCount}}
+              </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24">RFID 列表</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-table
+              #virtualTable
+              nzVirtualScroll
+              [nzVirtualItemSize]="54"
+              [nzData]="rfidList"
+              [nzFrontPagination]="false"
+              [nzShowPagination]="false"
+              [nzScroll]="{ x: '30px', y: '340px' }"
+            >
+              <tbody>
+                <ng-template nz-virtual-scroll let-data let-index="index">
+                  <tr>
+                    <td>{{ data }}</td>
+                  </tr>
+                  
+                </ng-template>
+              </tbody>
+            
+            </nz-table>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <div class="footer">
+          <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>{{'app.cancel' | translate}}</span></button>
+          <button type="button" (click)="rollback()" class="ant-btn ant-btn-primary" [disabled] = '!canBeRollBack'>
+            <span>{{'app.dispense.rollback' | translate}}</span>
+          </button>
+        </div>
+      </form>
+</div>

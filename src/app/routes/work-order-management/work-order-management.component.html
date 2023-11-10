@@ -1,0 +1,134 @@
+<div id="work-order-management">
+    <page-header title="{{'app.workorder.title' | translate}}"> </page-header>
+    <nz-card [nzBordered]="true" nzTitle="{{'app.workorder.list' | translate}}">
+        <div nz-row style="padding-bottom: 16px;">
+            <div nz-col style="padding-bottom: 12px; display: inline;" >
+              <button nz-button nzType="primary" (click)="createWorkOrderDetail()">
+                <span>{{'app.workorder.add' | translate}}</span>
+              </button>
+            </div>
+            <div nz-col style="padding: 16px; display: inline;">
+              <button nz-button  nz-popconfirm
+                nzPopconfirmTitle="{{ 'app.lock.delete.notice.begin' | translate }} {{numberOfChecked}} {{ 'app.lock.delete.notice.end' | translate }}"
+                (nzOnConfirm)="deleteWorkOrders()"
+                (nzOnCancel)="cancel()"
+                nzPopconfirmPlacement="top" 
+                [disabled]="numberOfChecked === 0" 
+                [nzType]="'primary'" 
+                [nzLoading]="isOperating" >
+                <span>{{'app.lock.delete' | translate}}</span>
+              </button>
+            </div>
+            <div nz-col  style="padding: 16px; display: inline;">
+              <label>开始时间：</label>
+              <nz-date-picker [(ngModel)]="startDateValue" (ngModelChange)="onStartChange($event)"></nz-date-picker>
+              <label style="padding: 4px;">--</label>
+              <label> 结束时间: </label>
+              <nz-date-picker [(ngModel)]="endDateValue" (ngModelChange)="onEndChange($event)"></nz-date-picker>
+            </div>
+            <div nz-col  style="padding: 16px; display: inline;">
+              <label>起始位置：</label>
+              <input nz-input nzSize="default" [(ngModel)]="startAddress" (ngModelChange)="onStartChange($event)" style="width: 200px; margin: 0 8px 8px 0;"/>
+              <label style="padding: 4px;">--</label>
+              <label> 到达位置: </label>
+              <input nz-input nzSize="default" [(ngModel)]="endAddress" (ngModelChange)="onEndChange($event)" style="width: 200px; margin: 0 8px 8px 0;"/>
+            </div>
+        </div>
+        <div>
+            <nz-table #lockTable nzBordered nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfData"
+              [nzLoading]="loading" nzSize="middle" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+              (nzPageIndexChange)="searchData()" (nzPageSizeChange)="searchData(true)"  (nzCurrentPageDataChange)="currentPageDataChange($event)">
+              <thead (nzSortChange)="sort($event)" nzSingleSort>
+                <tr>
+                  <th
+                    nzWidth="20px"
+                    nzShowCheckbox
+                    [(nzChecked)]="isAllDisplayDataChecked"
+                    [nzDisabled]="isAllDisplayDataDisabled"
+                    [nzIndeterminate]="isIndeterminate"
+                    (nzCheckedChange)="checkAll($event)"
+                  ></th>
+                  <th nzWidth="120px">{{'app.workorder.id' | translate}}</th>
+
+                  <th nzCustomFilter nzWidth="140px">
+                    {{'app.workorder.owner' | translate}}
+                    <i nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                      [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                      nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                  </th>
+
+                  <th nzCustomFilter nzWidth="140px">
+                    {{'app.workorder.carriera' | translate}}
+                    <i nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                      [nzDropdownMenu]="carrieramenu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                      nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                  </th>
+
+                  <th nzWidth="180px">{{'app.workorder.starttime' | translate}}</th>
+                  <th nzWidth="180px" ><span>{{'app.workorder.endtime' | translate}}</span></th>
+                  <th nzWidth="180px" ><span>{{'app.workorder.transport' | translate}}</span></th>
+                  <th nzWidth="220px" ><span>{{'app.workorder.start.address' | translate}}</span></th>
+                  <th nzWidth="220px" ><span>{{'app.workorder.end.address' | translate}}</span></th>
+                  <th nzWidth="200px" ><span>{{'app.workorder.barcode' | translate}}</span></th>
+                  <th nzShowFilter nzWidth="140px" [nzFilters]="statusTypeList" (nzFilterChange)="updateStatusFilter($event)"><span>{{'app.workorder.status' | translate}}</span></th>
+                  <th nzWidth="140px"><span>{{'app.action' | translate}}</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of lockTable.data">
+                  <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.workOrderId]" (nzCheckedChange)="refreshStatus()" [nzDisabled]="data.statusCode != 20001"></td>
+                  <td>{{ data.workOrderId }}</td>
+                  <td>{{ data.owner }}</td>
+                  <td>{{ data.carriera }}</td>
+                  <td>{{ data.startTime  | date:'yyyy-MM-dd'}}</td>
+                  <td>{{ data.endTime  | date:'yyyy-MM-dd'}}</td>
+                  <td>
+                    <nz-tag *ngFor="let tag of data.transportList">
+                    {{tag.transprortId}}
+                    </nz-tag>
+                  </td>
+                  <td>{{ data.addressList | addressPipe:30001}}</td>
+                  <td>{{ data.addressList | addressPipe:30002}}</td>
+                  <td>
+                        <nz-tag *ngFor="let tag of data.lockList">
+                        {{tag.barCode}}
+                        </nz-tag>
+                  </td>
+                  <td>{{ data.statusName }}</td>
+                  <td>
+                    <a role="button" (click)="editDetail(data)"  *ngIf = "data.statusCode === 20001"> {{'app.edit' | translate}} </a>
+                    <a role="button" (click)="viewDetail(data)"> 查看 </a>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+    </nz-card>
+    <!-- 货主姓名搜索框 -->
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+        <div class="search-box">
+        <input type="text" nz-input placeholder="{{'app.workorder.search.placeholder' | translate}}" [(ngModel)]="searchValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchData()" class="search-button">
+            {{ 'app.save' | translate }}
+        </button>
+        <button nz-button nzSize="small" (click)="reset()">{{ 'app.reset' | translate }}</button>
+        </div>
+    </nz-dropdown-menu>
+
+    <!-- 货主姓名搜索框 -->
+    <nz-dropdown-menu #carrieramenu="nzDropdownMenu">
+        <div class="search-box">
+        <input type="text" nz-input placeholder="{{'app.workorder.carriera.search.placeholder' | translate}}" [(ngModel)]="searchCarrieraValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchData()" class="search-button">
+            {{ 'app.save' | translate }}
+        </button>
+        <button nz-button nzSize="small" (click)="resetSearchCarrieraValue()">{{ 'app.reset' | translate }}</button>
+        </div>
+    </nz-dropdown-menu>
+
+    <app-work-order-draw  [(visible)]="viewSidebar" [pageMode]="pageMode"  [workOrderDetail]="selectedWorkOrderDetail"
+    [unusedLockList] = "unusedLockList"  (visibleChange)="onVisibleChange($event)">
+
+    </app-work-order-draw>
+
+</div>

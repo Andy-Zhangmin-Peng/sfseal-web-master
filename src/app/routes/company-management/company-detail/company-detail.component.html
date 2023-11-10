@@ -1,0 +1,68 @@
+<div>
+    <form nz-form [formGroup]="companyForm">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="companyName">{{'app.customer.name' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="companyNameErrorTpl">
+            <input nz-input formControlName="companyName" />
+            <ng-template #companyNameErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                {{'validation.customer.name.required' | translate}}
+              </ng-container>
+              <ng-container *ngIf="control.hasError('duplicated')">
+                {{'validation.customer.name.duplicate' | translate}}
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="email">{{'app.customer.email' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+            <input nz-input formControlName="email" type="email" />
+            <ng-template #emailErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('email')">
+                  {{'validation.customer.email.format' | translate}}
+                </ng-container>
+                <ng-container *ngIf="control.hasError('required')">
+                  {{'validation.customer.email.required' | translate}}
+                </ng-container>
+                <ng-container *ngIf="control.hasError('duplicated')">
+                  {{'validation.customer.email.duplicate' | translate}}
+                </ng-container>
+            </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="phoneNumber">{{'app.customer.phone' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="phoneNumberErrorTpl">
+            <input nz-input formControlName="phoneNumber" type="phoneNumber" maxLength=11/>
+            <ng-template #phoneNumberErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                {{'validation.customer.phone.required' | translate}}
+              </ng-container>
+              <ng-container *ngIf="control.hasError('pattern')">
+                {{'validation.user.phone.format' | translate}}
+              </ng-container>
+              <ng-container *ngIf="control.hasError('duplicated')">
+                {{'validation.customer.phone.duplicate' | translate}}
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="address">{{'app.customer.address' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入企业地址">
+              <textarea nz-input id="address" formControlName="address"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+    
+        <div class="footer">
+          <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>{{'app.cancel' | translate}}</span></button>
+          <button type="button" (click)="save()" class="ant-btn ant-btn-primary" [disabled]="companyForm.invalid">
+            <span>{{'app.save' | translate}}</span>
+          </button>
+        </div>
+      </form>
+</div>

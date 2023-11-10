@@ -1,0 +1,50 @@
+<div>
+    <form nz-form [formGroup]="departmentForm">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="departmentName">{{ 'app.department.name' | translate }}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="departmentNameErrorTpl">
+            <input nz-input formControlName="departmentName" />
+            <ng-template #departmentNameErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                {{'validation.department.name.required' | translate}}
+              </ng-container>
+              <ng-container *ngIf="control.hasError('duplicated')">
+                {{'validation.department.name.duplicate' | translate}}
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="departmentAdministrator">{{ 'app.department.admin' | translate }}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="{{'validation.department.admin.required' | translate}}">
+              <input nz-input formControlName="departmentAdministrator" id="departmentAdministrator" />
+            </nz-form-control>
+          </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="departmentPhoneNumber">{{ 'app.department.phone' | translate }}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="phoneNumberErrorTpl">
+            <input nz-input formControlName="departmentPhoneNumber" type="phoneNumber" />
+            <ng-template #phoneNumberErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                {{ 'validation.department.phone.required' | translate }}
+              </ng-container>
+              <ng-container *ngIf="control.hasError('pattern')">
+                {{'validation.user.phone.format' | translate}}
+              </ng-container>
+              <ng-container *ngIf="control.hasError('duplicated')">
+                {{ 'validation.department.phone.duplicate' | translate }}
+              </ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+    
+        <div class="footer">
+          <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>{{ 'app.cancel' | translate }}</span></button>
+          <button type="button" (click)="save()" class="ant-btn ant-btn-primary" [disabled]="departmentForm.invalid">
+            <span>{{ 'app.save' | translate }}</span>
+          </button>
+        </div>
+      </form>
+</div>

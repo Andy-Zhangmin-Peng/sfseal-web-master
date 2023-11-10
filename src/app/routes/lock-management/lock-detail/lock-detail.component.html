@@ -1,0 +1,43 @@
+<div>
+    <form nz-form [formGroup]="lockForm">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="barCode">{{'app.lock.sequencenumber' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+            <!-- <input nz-input formControlName="barCode" /> -->
+            <nz-form-text>{{lockModel.barCode}}</nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="rfid">{{'app.lock.rfid' | translate}} </nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+            <!-- <input nz-input formControlName="rfid"/> -->
+            <nz-form-text>{{lockModel.rfid}}</nz-form-text>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="boxId">{{'app.lock.boxid' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+            <!-- <input nz-input formControlName="boxId" /> -->
+            <nz-form-text>{{lockModel.boxId}}</nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="companyId">{{'app.lock.company' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="{{'validation.user.company.required' | translate}}">
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="{{'validation.user.company.required' | translate}}" formControlName="companyId">
+                    <nz-option *ngFor="let o of companyList" [nzLabel]="o.text" [nzValue]="o.value"> </nz-option>
+                  </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    
+        <div class="footer">
+          <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>{{'app.cancel' | translate}}</span></button>
+          <button type="button" (click)="save()" class="ant-btn ant-btn-primary" [disabled]="lockForm.invalid">
+            <span>{{'app.save' | translate}}</span>
+          </button>
+        </div>
+      </form>
+</div>

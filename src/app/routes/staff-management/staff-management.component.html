@@ -1,0 +1,73 @@
+<div id="staff-management">
+  <page-header title="{{ 'app.user.title' | translate }}"> </page-header>
+  <nz-card [nzBordered]="true" nzTitle="{{ 'app.user.list' | translate }}">
+    <nz-row>
+      <div style="padding-bottom: 12px;">
+        <button nz-button nzType="primary" (click)="createStaffDetail()">
+          <span>{{ 'app.user.add' | translate }}</span>
+        </button>
+      </div>
+
+      <nz-table #staffTable nzBordered nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfData"
+        [nzLoading]="loading" nzSize="middle" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+        (nzPageIndexChange)="searchData()" (nzPageSizeChange)="searchData(true)">
+        <thead (nzSortChange)="sort($event)" nzSingleSort>
+          <tr>
+            <th nzCustomFilter nzWidth="100px">
+              {{ 'app.user.name' | translate }}
+              <i nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+            </th>
+
+            <th nzShowFilter nzWidth="240px" [nzFilters]="companyList" (nzFilterChange)="updateFilter($event)">
+              {{ 'app.user.company' | translate }}
+            </th>
+            <th nzShowSort nzWidth="180px" nzSortKey="mobile"><span> {{ 'app.user.phone' | translate }}</span></th>
+            <th nzShowSort nzWidth="180px" nzSortKey="officePhoneNumber"><span>{{ 'app.user.office.phone' | translate }}</span></th>
+            <th nzShowSort nzSortKey="address"><span>{{ 'app.user.address' | translate }}</span></th>
+            <th nzWidth="100px"><span>{{ 'app.action' | translate }}</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of staffTable.data">
+            <td>{{ data.name }}</td>
+            <td>{{ data.companyName }}</td>
+            <td>{{ data.mobile }}</td>
+            <td>{{ data.officePhoneNumber }}</td>
+            <td>{{ data.address }}</td>
+            <td>
+              <div class="editable-row-operations">
+                <a (click)="openDetail(data)">{{ 'app.edit' | translate }}</a>
+                <a 
+                  nz-popconfirm
+                  nzPopconfirmTitle="{{'app.user.inactive.confirm' | translate}}"
+                  nzPopconfirmPlacement="bottom"
+                  (nzOnConfirm)="inactive(data)"
+                  (nzOnCancel)="cancel()"
+                  style="padding: 4px;" *ngIf = "data.accountId != -1">禁用</a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-row>
+  </nz-card>
+
+  <!-- 姓名搜索框 -->
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div class="search-box">
+      <input type="text" nz-input placeholder="{{ 'app.user.search.placeholder' | translate }}" [(ngModel)]="searchValue" />
+      <button nz-button nzSize="small" nzType="primary" (click)="searchData()" class="search-button">
+        {{ 'app.save' | translate }}
+      </button>
+      <button nz-button nzSize="small" (click)="reset()">{{ 'app.reset' | translate }}</button>
+    </div>
+  </nz-dropdown-menu>
+
+  <app-staff-draw [(visible)]="viewSidebar" [pageMode]="pageMode" [accountDetail]="selectedstaffDetail"
+    [companyList]="companyList"  (visibleChange)="onVisibleChange($event)">
+
+  </app-staff-draw>
+
+</div>

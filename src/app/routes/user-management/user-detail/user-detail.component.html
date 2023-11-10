@@ -1,0 +1,90 @@
+<div>
+    <!-- 添加账号管理员 -->
+    <form nz-form [formGroup]="userForm">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="accountName">{{'app.user.account.name' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="userErrorTpl">
+          <input nz-input formControlName="accountName" />
+          <ng-template #userErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">
+              {{'validation.user.name.required' | translate}}
+            </ng-container>
+            <ng-container *ngIf="control.hasError('duplicated')">
+              {{'validation.user.name.duplicate' | translate}}
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+  
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="password" nzRequired>{{'app.user.account.password' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your password!">
+          <a role="button" *ngIf="!showPassword && pageMode == pageModeEnum.CREATE" (click)="generatePassword()">{{'app.user.account.generate.password' | translate}}</a>
+          <a role="button" *ngIf="!showPassword && pageMode == pageModeEnum.EDIT" (click)="generatePassword()">{{ 'app.user.account.reset.password' | translate }}</a>
+          <nz-input-group [nzAddOnAfter]="suffixTemplateInfo" *ngIf="showPassword">
+            <input nz-input id="password" formControlName="password"  />
+          </nz-input-group>
+          <ng-template #suffixTemplateInfo>
+            <i nz-icon nzType="copy" nzTheme="fill" (click)="copyPassword()"></i>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+  
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="email">{{'app.user.email' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+          <input nz-input formControlName="email" type="email" />
+          <ng-template #emailErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('email')">
+              {{'validation.user.email.format' | translate}}
+            </ng-container>
+            <ng-container *ngIf="control.hasError('duplicated')">
+              {{'validation.user.email.required' | translate}}
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber">{{'app.user.account.phone' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="phoneNumberErrorTpl">
+          <input nz-input formControlName="phoneNumber" type="phoneNumber" maxLength=11/>
+          <ng-template #phoneNumberErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('pattern')">
+              {{'validation.user.phone.format' | translate}}
+            </ng-container>
+            <ng-container *ngIf="control.hasError('duplicated')">
+              {{'validation.user.phone.duplicate' | translate}}
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">{{'app.user.user.name' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="{{'validation.user.name.required' | translate}}">
+          <input nz-input formControlName="name" id="name" />
+        </nz-form-control>
+      </nz-form-item>
+  
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="mobile">{{'app.user.user.phone' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="{{'validation.user.phone.format' | translate}}">
+          <input nz-input formControlName="mobile" id="mobile" maxLength=11/>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="address">{{'app.user.address' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <input nz-input formControlName="address" id="address" />
+        </nz-form-control>
+      </nz-form-item>
+      <div class="footer">
+        <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>{{'app.cancel'| translate}}</span></button>
+        <button type="button" (click)="save()" class="ant-btn ant-btn-primary" [disabled]="userForm.invalid">
+          <span>{{'app.save'| translate}}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  

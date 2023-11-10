@@ -1,0 +1,137 @@
+{
+  "app": {
+    "name": "电子封锁管理平台",
+    "description": "Ng-zorro admin panel front-end framework"
+  },
+  "user": {
+  },
+  "menu": [
+    {
+      "text": "主导航",
+      "i18n": "menu.main",
+      "group": true,
+      "admin": false,
+      "hideInBreadcrumb": true,
+      "children": [
+        {
+          "text": "部门管理",
+          "i18n": "menu.dashboard.department",
+          "link": "/department-management",
+          "icon": {
+            "type": "icon",
+            "value": "apartment"
+          }
+        },
+        {
+          "text": "用户管理",
+          "i18n": "menu.dashboard.user",
+          "acl": "SYSTEM_ADMIN",
+          "link": "/staff-management",
+          "icon": {
+            "type": "icon",
+            "value": "user"
+          }
+        },
+        {
+          "text": "终端用户管理",
+          "i18n": "menu.dashboard.enduser",
+          "acl": "COMPANY_ADMIN",
+          "link": "/user-management",
+          "icon": {
+            "type": "icon",
+            "value": "user"
+          }
+        },
+        {
+          "text": "企业管理",
+          "i18n": "menu.dashboard.company",
+          "acl": "SYSTEM_ADMIN",
+          "link": "/company-management",
+          "icon": {
+            "type": "icon",
+            "value": "usergroup-add"
+          }
+        },
+        {
+          "text": "工单管理",
+          "i18n": "menu.dashboard.workorder",
+          "acl": "COMPANY_ADMIN",
+          "link": "/work-order-management",
+          "icon": {
+            "type": "icon",
+            "value": "file-word"
+          }
+        },
+        {
+          "text": "电子封锁管理",
+          "i18n": "menu.dashboard.lock",
+          "link": "/lock-management",
+          "icon": {
+            "type": "icon",
+            "value": "lock"
+          }
+        },
+        {
+          "text": "分发记录",
+          "acl": "SYSTEM_ADMIN",
+          "i18n": "menu.dashboard.dispense",
+          "link": "/dispense-management",
+          "icon": {
+            "type": "icon",
+            "value": "export"
+          }
+        },
+        {
+          "text": "导入记录",
+          "acl": "SYSTEM_ADMIN",
+          "i18n": "menu.dashboard.import",
+          "link": "/import-record-management",
+          "icon": {
+            "type": "icon",
+            "value": "import"
+          }
+        },
+        {
+          "text": "库存统计",
+          "i18n": "menu.dashboard.inventory",
+          "link": "/inventory-management",
+          "icon": {
+            "type": "icon",
+            "value": "bank"
+          }
+        },
+        {
+          "text": "异常统计",
+          "acl": "COMPANY_ADMIN",
+          "i18n": "menu.dashboard.exception",
+          "link": "/exceptional-situation-management",
+          "icon": {
+            "type": "icon",
+            "value": "warning"
+          }
+        },
+        {
+          "text": "公司信息",
+          "acl": ["COMPANY_ADMIN","SYSTEM_ADMIN"],
+          "i18n": "menu.dashboard.company.info",
+          "link": "/company-info",
+          "icon": {
+            "type": "icon",
+            "value": "profile"
+          }
+        },
+        {
+          "text": "个人信息",
+          "acl": ["COMPANY_ADMIN","SYSTEM_ADMIN"],
+          "i18n": "menu.dashboard.user.info",
+          "link": "/user-profile",
+          "icon": {
+            "type": "icon",
+            "value": "user"
+          }
+        }
+
+      ]
+    }
+  ]
+}

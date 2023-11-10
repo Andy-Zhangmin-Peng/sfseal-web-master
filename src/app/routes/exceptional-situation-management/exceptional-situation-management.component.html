@@ -1,0 +1,61 @@
+<div id="exception-situation-management">
+    <page-header title="{{'app.exception.title' | translate}}"> </page-header>
+    <nz-card [nzBordered]="true" nzTitle="{{'app.exception.list' | translate}}">
+
+        <nz-table #exceptionTable nzBordered nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfData"
+            [nzLoading]="loading" nzSize="middle" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="searchData()" (nzPageSizeChange)="searchData(true)">
+            <thead (nzSortChange)="sort($event)" nzSingleSort>
+                <tr>
+                    <th nzWidth="80px" ><span>{{'app.exception.id' | translate}}</span></th>
+
+                    <th nzCustomFilter nzWidth="120px">
+                        {{'app.exception.barcode' | translate}}
+                        <i nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                            [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                            nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter>
+                        </i>
+                    </th>
+                    <th nzWidth="80px" ><span>{{'app.exception.type' | translate}}</span></th>
+                    <th nzWidth="80px" ><span>{{'app.exception.reporter' | translate}}</span></th>
+                    <th nzWidth="180px" ><span>{{'app.exception.address' | translate}}</span></th>
+                    <th nzShowSort nzWidth="100px" ><span>{{'app.exception.date' | translate}}</span></th>
+                    <th nzWidth="100px" ><span>{{'app.workorder.transport' | translate}}</span></th>
+                    <th nzWidth="180px" ><span>{{'app.exception.desc' | translate}}</span></th>
+                    <th nzWidth="80px" ><span>{{'app.action' | translate}}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of exceptionTable.data">
+                    <td>{{ data.exceptionId }}</td>
+                    <td>{{ data.barCode}}</td>
+                    <td>{{ data.exceptionTypeName }}</td>
+                    <td>{{ data.lastUpdateUser}}</td>
+                    <td>{{ data.addressDetail }}</td>
+                    <td>{{ data.createDate | date:'yyyy-MM-dd'}}</td>
+                    <td>{{ data.tranId }}</td>
+                    <td>{{ data.exceptionMessage }}</td>
+                    <td>
+                        <div class="editable-row-operations">
+                          <a (click)=openDetail(data) >{{ 'app.view' | translate }}</a>
+                        </div>
+                      </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-card>
+    <!-- 公司名称搜索框 -->
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+        <div class="search-box">
+            <input type="text" nz-input placeholder="请输入电子封锁序列号" [(ngModel)]="searchValue" />
+            <button nz-button nzSize="small" nzType="primary" (click)="searchData()" class="search-button">
+                {{ 'app.save' | translate }}
+            </button>
+            <button nz-button nzSize="small" (click)="reset()">{{ 'app.reset' | translate }}</button>
+        </div>
+    </nz-dropdown-menu>
+
+    <app-exceptional-situation-draw [(visible)]="viewSidebar" [pageMode]="pageMode" [exceptionalSituationDetail]="selectedExceptionalSituationDetail">
+
+    </app-exceptional-situation-draw>
+</div>

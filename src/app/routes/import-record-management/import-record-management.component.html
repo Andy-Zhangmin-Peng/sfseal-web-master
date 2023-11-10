@@ -1,0 +1,33 @@
+<div id="import-record-management">
+    <page-header title="{{'app.import.title' | translate}}"> </page-header>
+    <nz-card [nzBordered]="true" nzTitle="{{'app.import.list' | translate}}">
+        <nz-table #importRecordTable nzBordered nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfData"
+            [nzLoading]="loading" nzSize="middle" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="searchData()" (nzPageSizeChange)="searchData(true)">
+            <thead (nzSortChange)="sort($event)" nzSingleSort>
+                <tr>
+                    <th nzWidth="100px" nzSortKey="dispenseId"><span>{{'app.import.id' | translate}}</span></th>
+                    <th nzWidth="180px">{{'app.import.date' | translate}}</th>
+                    <th nzWidth="180px" nzSortKey="dispenseDate"><span>{{'app.import.user' | translate}}</span></th>
+                    <th nzWidth="140px" nzSortKey="dispenseUser"><span>{{'app.import.count' | translate}}</span></th>
+                    <th nzWidth="100px"><span>{{'app.action' | translate}}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of importRecordTable.data">
+                    <td>{{ data.importId }}</td>
+                    <td>{{ data.createDate | date:'yyyy-MM-dd'}}</td>
+                    <td>{{ data.lastUpdateUser }}</td>
+                    <td>{{ data.importCount }}</td>
+                    <td>
+                    <div class="editable-row-operations">
+                        <a (click)="openDetail(data)">{{'app.view' | translate}}</a>
+                    </div>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-card>
+    <app-import-record-draw [(visible)]="viewSidebar" [pageMode]="pageMode" [importRecordDetail]="selectedImportRecordDetail" [rfidList] = "rfidList" (visibleChange)="onVisibleChange($event)">
+    </app-import-record-draw>
+</div>

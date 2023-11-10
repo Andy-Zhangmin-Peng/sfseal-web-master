@@ -1,0 +1,59 @@
+<div>
+  <form nz-form [formGroup]="importRecordForm">
+      <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24">{{'app.import.id' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+              {{importRecordDetail.importId}}
+          </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" >{{'app.import.date' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" >
+          {{importRecordDetail.createDate | date:'yyyy-MM-dd'}}
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24">{{'app.import.user' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            {{importRecordDetail.lastUpdateUser}}
+          </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">{{'app.import.count' | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          {{importRecordDetail.importCount}}
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">RFID 列表</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-table
+            #virtualTable
+            nzVirtualScroll
+            [nzVirtualItemSize]="54"
+            [nzData]="rfidList"
+            [nzFrontPagination]="false"
+            [nzShowPagination]="false"
+            [nzScroll]="{ x: '30px', y: '340px' }"
+          >
+            <tbody>
+              <ng-template nz-virtual-scroll let-data let-index="index">
+                <tr>
+                  <td>{{ data }}</td>
+                </tr>
+                
+              </ng-template>
+            </tbody>
+          
+          </nz-table>
+        </nz-form-control>
+      </nz-form-item>
+      <div class="footer">
+        <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>{{'app.cancel' | translate}}</span></button>
+      </div>
+    </form>
+
+</div>

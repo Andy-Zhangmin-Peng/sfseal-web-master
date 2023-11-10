@@ -1,0 +1,62 @@
+<div id="dispense-management">
+    <page-header title="{{'app.dispense.title' | translate}}"> </page-header>
+    <nz-card [nzBordered]="true" nzTitle="{{'app.dispense.list' | translate}}">
+        <nz-table #dispenseTable nzBordered nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfData"
+            [nzLoading]="loading" nzSize="middle" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="searchData()" (nzPageSizeChange)="searchData(true)">
+            <thead (nzSortChange)="sort($event)" nzSingleSort>
+                <tr>
+                    <th nzShowSort nzWidth="100px" nzSortKey="dispenseId"><span>{{'app.dispense.id' | translate}}</span></th>
+                    <th nzCustomFilter nzWidth="240px">
+                        {{'app.dispense.company' | translate}}
+                        <i nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                            [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                            nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter>
+                        </i>
+                    </th>
+
+                    <th nzShowSort nzWidth="180px" nzSortKey="dispenseDate"><span>{{'app.dispense.date' | translate}}</span></th>
+                    <th nzShowSort nzWidth="140px" nzSortKey="dispenseUser"><span>{{'app.dispense.user' | translate}}</span></th>
+                    <th nzShowSort nzWidth="140px"  nzSortKey="dispenseCount"><span>{{'app.dispense.count' | translate}}</span></th>
+                    <th nzWidth="100px"><span>{{'app.action' | translate}}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of dispenseTable.data">
+                    <td>{{ data.dispenseRecordId }}</td>
+                    <td>{{ data.companyName }}</td>
+                    <td>{{ data.createDate | date:'yyyy-MM-dd'}}</td>
+                    <td>{{ data.lastUpdateUser }}</td>
+                    <td>{{ data.dispenseCount }}</td>
+                    <td>
+                    <div class="editable-row-operations">
+                        <a (click)="openDetail(data)" *ngIf="data.isActive">{{'app.view' | translate}}</a>
+                        <a (click)="redispense(data)" *ngIf="!data.isActive">{{'app.dispense.redispense' | translate}}</a>
+                    </div>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-card>
+    <!-- 公司名称搜索框 -->
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+        <div class="search-box">
+            <input type="text" nz-input placeholder="{{'validation.customer.name.required' | translate}}" [(ngModel)]="searchValue" />
+            <button nz-button nzSize="small" nzType="primary" (click)="searchData()" class="search-button">
+                {{ 'app.save' | translate }}
+            </button>
+            <button nz-button nzSize="small" (click)="reset()">{{ 'app.reset' | translate }}</button>
+        </div>
+    </nz-dropdown-menu>
+
+    <!-- 重新分发modal -->
+    <nz-modal [(nzVisible)]="isDispenseVisible" nzTitle="{{'app.dispense.redispense' | translate}}" (nzOnCancel)="handleCancelDispense()" (nzOnOk)="operateData()">
+        <p>{{'app.dispense.company.select' | translate}}</p>
+        <nz-select nzShowSearch nzAllowClear  nzPlaceHolder="{{'validation.user.company.required' | translate}}" [(ngModel)] = "selectedDispenseCompany">
+          <nz-option nzWidth="180px" *ngFor="let o of companyList" [nzLabel]="o.text" [nzValue]="o.value"> </nz-option>
+        </nz-select>
+    </nz-modal>
+
+    <app-dispense-draw [(visible)]="viewSidebar" [pageMode]="pageMode" [dispenseRecordDetail]="selectedDispenseRecordDetail"  (visibleChange)="onVisibleChange($event)">
+    </app-dispense-draw>
+</div>

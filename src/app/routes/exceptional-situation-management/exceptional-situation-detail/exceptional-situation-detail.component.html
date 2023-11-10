@@ -1,0 +1,93 @@
+<div>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="exceptionId">{{'app.exception.id' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+            {{exceptionalSituationDetail.exceptionId}}
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workOrderId">{{'app.workorder.id' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" >
+                {{exceptionalSituationDetail.workOrderId}}
+            </nz-form-control>
+          </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24"  nzFor="barCode">{{'app.exception.barcode' | translate}}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+            {{exceptionalSituationDetail.barCode}}
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="exceptionType">{{'app.exception.type' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                {{exceptionalSituationDetail.exceptionTypeName}}
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="reportUser">{{'app.exception.reporter' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                {{exceptionalSituationDetail.lastUpdateUser}}
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="reportUser">{{'app.workorder.transport' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                {{ exceptionalSituationDetail.tranId }}
+            </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="reportAddress">{{'app.exception.address' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                {{exceptionalSituationDetail.addressDetail}}
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">{{'app.exception.date' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                {{ exceptionalSituationDetail.createDate | date:'yyyy-MM-dd'}}
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" >{{'app.exception.photo' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                <div class="clearfix">
+                    <nz-upload
+                      nzAction=""
+                      nzListType="picture-card"
+                      [(nzFileList)]="fileList"
+                      [nzShowButton]="fileList.length < 3"
+                      [nzPreview]="handlePreview"
+                      [nzOpenFileDialogOnClick] = false
+                      [nzDisabled] = true
+                    >
+                    </nz-upload>
+                    <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+                      (nzOnCancel)="previewVisible = false && pageMode == pageModeEnum.EDIT"
+                    >
+                      <ng-template #modalContent>
+                        <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+                      </ng-template>
+                    </nz-modal>
+                  </div>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="reportUser">{{'app.exception.desc' | translate}}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                {{ exceptionalSituationDetail.exceptionMessage }}
+            </nz-form-control>
+        </nz-form-item>
+
+        <div class="footer">
+          <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>{{ 'app.cancel' | translate }}</span></button>
+        </div>
+</div>

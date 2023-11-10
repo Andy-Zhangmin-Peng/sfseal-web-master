@@ -1,0 +1,120 @@
+<div id="inventory-management">
+    <page-header title="{{'app.inventory.title' | translate}}"> </page-header>
+    <!-- 系统管理员查看库存列表 -->
+    <nz-card [nzBordered]="true" nzTitle="{{'app.inventory.list' | translate}}" *ngIf = "isSystemadmin">
+        <nz-table #inventoryTable nzBordered nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfData"
+            [nzLoading]="loading" nzSize="middle" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="searchData()" (nzPageSizeChange)="searchData(true)">
+            <thead (nzSortChange)="sort($event)" nzSingleSort>
+                <tr>
+                    <th nzCustomFilter nzWidth="240px">
+                        {{'app.inventory.company' | translate}}
+                        <i nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                            [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                            nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter>
+                        </i>
+                    </th>
+                    <th nzWidth="180px" ><span>{{'app.inventory.recent.purched.quantity' | translate}}</span></th>
+                    
+                    <th nzCustomFilter nzWidth="180px">
+                        {{'app.inventory.remaining' | translate}}
+                        <i nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                            [nzDropdownMenu]="remainingSearch" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                            nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter>
+                        </i>
+                    </th>
+                    <th nzWidth="140px" ><span>{{'app.inventory.recent.purched.time' | translate}}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of inventoryTable.data">
+                    <td>{{ data.companyName }}</td>
+                    <td>{{ data.latestPurchaseCount}}</td>
+                    <td>{{ data.unusedCount }}</td>
+                    <td>{{ data.latestPurchaseDate | date:'yyyy-MM-dd'}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-card>
+
+    <!-- 企业管理员库存列表 -->
+    <nz-card *ngIf = "!isSystemadmin" nzTitle="{{'app.inventory.statistics' | translate}}">
+        <nz-row [nzGutter]="24">
+            <nz-col [nzSpan]="6">
+              <nz-statistic [nzValue]="unusedCount | number" [nzTitle]="'剩余数量'"></nz-statistic>
+            </nz-col>
+            <nz-col [nzSpan]="6">
+              <nz-statistic [nzValue]="latestPurchaseCount | number" [nzTitle]="'最近购买数量'"></nz-statistic>
+            </nz-col>
+            <nz-col [nzSpan]="6">
+                <nz-statistic [nzValue]="usedCount | number" [nzTitle]="'总消耗数量'"></nz-statistic>
+            </nz-col>
+            <nz-col [nzSpan]="6">
+                <nz-statistic [nzValue]="purchaseCount  | number" [nzTitle]="'总购买数量'"></nz-statistic>
+            </nz-col>
+        </nz-row>
+    </nz-card>
+    <nz-card *ngIf = "!isSystemadmin" nzTitle="{{'app.purched.record' | translate}}">
+        <div style="padding-bottom: 12px;">
+            <button nz-button nzType="primary" (click)="purchLocks()">
+              <span>{{'app.purched' | translate}}</span>
+            </button>
+        </div>
+        <nz-table #inventoryTable nzBordered nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfDispenseRecord"
+            [nzLoading]="loading" nzSize="middle" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="searchData()" (nzPageSizeChange)="searchData(true)">
+            <thead (nzSortChange)="sort($event)" nzSingleSort>
+                <tr>
+                    <th nzShowSort nzWidth="140px"><span>{{'app.purched.orderId' | translate}}</span></th>
+                    <th nzShowSort nzWidth="180px"><span>{{'app.purched.quantity' | translate}}</span></th>
+                    <th nzShowSort nzWidth="180px"><span>{{'app.purched.date' | translate}}</span></th>
+                    <th nzShowSort nzWidth="140px"><span>{{'app.purched.status' | translate}}</span></th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of inventoryTable.data">
+                    <td>{{ data.dispenseRecordId }}</td>
+                    <td>{{ data.dispenseCount }}</td>
+                    <td>{{ data.lastUpdateDate | date:'yyyy-MM-dd'}}</td>
+                    <td>
+                        <div class="editable-row-operations">
+                            <a *ngIf="data.accpeted" disabled>{{'app.purched.status.accpeted' | translate}}</a>
+                            <a (click)="receive(data)" *ngIf="!data.accpeted">{{'app.purched.status.accpet' | translate}}</a>
+                        </div>
+                    </td>
+                    
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-card>
+
+    <!-- 公司名称搜索框 -->
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+        <div class="search-box">
+            <input type="text" nz-input placeholder="请输入企业名称" [(ngModel)]="searchValue" />
+            <button nz-button nzSize="small" nzType="primary" (click)="searchData()" class="search-button">
+                {{ 'app.save' | translate }}
+            </button>
+            <button nz-button nzSize="small" (click)="reset()">{{ 'app.reset' | translate }}</button>
+        </div>
+    </nz-dropdown-menu>
+
+
+    <!-- 剩余数量 -->
+    <nz-dropdown-menu #remainingSearch="nzDropdownMenu">
+        <div class="search-box">
+            <nz-input-number placeholder="请输入剩余数量" [(ngModel)]="searchUnusedCount" ></nz-input-number>
+            <button nz-button nzSize="small" nzType="primary" (click)="searchData()" class="search-button">
+                {{ 'app.save' | translate }}
+            </button>
+            <button nz-button nzSize="small" (click)="resetUnusedCount()">{{ 'app.reset' | translate }}</button>
+        </div>
+    </nz-dropdown-menu>
+
+    <!-- 购买modal -->
+    <nz-modal [(nzVisible)]="isVisible" nzTitle="购买电子封锁" (nzOnCancel)="handleCancelDispense()" (nzOnOk)="operateData()">
+        <p>请输入购买数量 :</p>
+        <input type="number" nz-input placeholder="请输入购买数量" [(ngModel)]="purchCount" />
+    </nz-modal>
+</div>

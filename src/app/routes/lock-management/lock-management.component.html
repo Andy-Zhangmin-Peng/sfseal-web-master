@@ -1,0 +1,151 @@
+<div id="lock-management">
+    <page-header title="{{'app.lock.title' | translate}}"> </page-header>
+    <nz-card [nzBordered]="true" nzTitle="{{'app.lock.list' | translate}}">
+        <!-- <nz-row> -->
+          <div nz-row style="padding-bottom: 16px;" *ngIf= "isSystemadmin">
+            <div nz-col style="padding-bottom: 12px; display: inline;" >
+              <button nz-button nzType="primary"  (click)="importLock()">
+                <span>{{'app.lock.import' | translate}}</span>
+              </button>
+            </div>
+            <div nz-col style="padding-left: 16px; display: inline;">
+              <button nz-button [disabled]="numberOfChecked === 0" [nzType]="'default'" [nzLoading]="isDispenseOperating" (click)="dispenseLock()">
+                <span>{{'app.lock.dispense' | translate}}</span>
+              </button>
+            </div>
+            <div nz-col style="padding: 16px; display: inline;">
+              <button nz-button  nz-popconfirm
+                nzPopconfirmTitle="{{ 'app.lock.delete.notice.begin' | translate }} {{numberOfChecked}} {{ 'app.lock.delete.notice.end' | translate }}"
+                (nzOnConfirm)="deleteLocks()"
+                (nzOnCancel)="cancel()"
+                nzPopconfirmPlacement="top" 
+                [nzType]="'danger'" 
+                [nzLoading]="isOperating"
+                [disabled]="numberOfChecked === 0" >
+                <span>{{'app.lock.delete' | translate}}</span>
+              </button>
+            </div>
+          </div>
+          <div>
+              <nz-table #lockTable nzBordered nzShowSizeChanger [nzFrontPagination]="false" [nzData]="listOfData"
+                [nzLoading]="loading" nzSize="middle" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+                (nzPageIndexChange)="searchData()" (nzPageSizeChange)="searchData(true)"  (nzCurrentPageDataChange)="currentPageDataChange($event)">
+                <thead (nzSortChange)="sort($event)" nzSingleSort>
+                  <tr>
+                    <th
+                      nzWidth="20px"
+                      nzShowCheckbox
+                      [(nzChecked)]="isAllDisplayDataChecked"
+                      [nzDisabled]="isAllDisplayDataDisabled"
+                      [nzIndeterminate]="isIndeterminate"
+                      (nzCheckedChange)="checkAll($event)"
+                    ></th>
+                    <th nzCustomFilter nzWidth="200px">
+                      {{'app.lock.sequencenumber' | translate}}
+                      <i nz-th-extra class="ant-table-filter-icon" nz-icon nz-dropdown #dropdown="nzDropdown" nzType="search"
+                        [nzDropdownMenu]="menu" [class.ant-table-filter-open]="dropdown.nzVisible" nzTrigger="click"
+                        nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter></i>
+                    </th>
+        
+                    <th nzWidth="240px"> {{'app.lock.rfid' | translate}} </th>
+
+                    <th nzWidth="200px" [nzFilters]="boxList" (nzFilterChange)="updateFilter($event)">
+                      {{'app.lock.boxid' | translate}}
+                    </th>
+                    <th  nzWidth="180px"  *ngIf= "!isSystemadmin"><span>{{'app.lock.company' | translate}}</span></th>
+                    <th nzShowFilter nzWidth="180px" [nzFilters]="companyList" (nzFilterChange)="updateFilter($event)" *ngIf= "isSystemadmin"><span>{{'app.lock.company' | translate}}</span></th>
+                    <th nzShowFilter nzWidth="140px" [nzFilters]="statusTypeList" (nzFilterChange)="updateStatusFilter($event)"><span>{{'app.lock.status' | translate}}</span></th>
+                    <th nzWidth="100px"><span>{{'app.action' | translate}}</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of lockTable.data">
+                    <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.rfid]" (nzCheckedChange)="refreshStatus()" [nzDisabled]="data.statusCode != 10001" ></td>
+                    <td>{{ data.barCode }}</td>
+                    <td>{{ data.rfid }}</td>
+                    <td>{{ data.boxId }}</td>
+                    <td>{{ data.companyName }}</td>
+                    <td>{{ data.statusName }}</td>
+                    <td>
+                      <div class="editable-row-operations">
+                        <button nz-button (click)="openDetail(data)" [disabled]="data.statusCode != 10001">{{'app.edit' | translate}}</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+        <!-- </nz-row> -->
+    </nz-card>
+    <!-- 序列号搜索框 -->
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+        <div class="search-box">
+        <input type="text" nz-input placeholder="{{'app.lock.search.placeholder' | translate}}" [(ngModel)]="searchValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="searchData()" class="search-button">
+            {{ 'app.save' | translate }}
+        </button>
+        <button nz-button nzSize="small" (click)="reset()">{{ 'app.reset' | translate }}</button>
+        </div>
+    </nz-dropdown-menu>
+
+    <!-- 批量导入电子封锁模块 -->
+    <nz-modal
+      [(nzVisible)]="isModalVisible"
+      [nzTitle]="modalTitle"
+      [nzContent]="modalContent"
+      [nzFooter]="modalFooter"
+      (nzOnCancel)="handleCancelImport()"
+    >
+      <ng-template #modalTitle>
+        {{'app.lock.import' | translate}}
+      </ng-template>
+
+      <ng-template #modalContent>
+
+        <div>
+          <span> {{'app.lock.import.file' | translate}}</span>
+        </div>
+        <div style="padding-top: 6px;">
+          <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" >
+            <button nz-button><i nz-icon nzType="upload"></i><span>{{'app.lock.import.filechose' | translate}}</span></button>
+          </nz-upload>
+        </div>
+        <div style="padding-top: 12px;">
+          <div>
+            <span>{{'app.lock.import.methodchose' | translate}}</span>
+          </div>
+          <div>
+            <nz-radio-group [(ngModel)]="importType" (ngModelChange)="importTypeChange($event)">
+              <label nz-radio nzValue="dispense">{{'app.lock.import.dispense' | translate}}</label>
+              <label nz-radio nzValue="stage">{{'app.lock.import.store' | translate}}</label>
+            </nz-radio-group>
+          </div>
+
+          <div  style="padding-top: 12px;" *ngIf="showCompany">
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="{{'validation.user.company.required' | translate}}" [(ngModel)] = "selectedCompany">
+              <nz-option nzWidth="80px" *ngFor="let o of companyList" [nzLabel]="o.text" [nzValue]="o.value"> </nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="handleCancelImport()">{{'app.cancel' | translate}}</button>
+        <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()" [disabled]="fileList != null &&  fileList.length == 0" style="margin-top: 16px" >
+          {{'app.lock.import.upload' | translate}} 
+        </button>
+      </ng-template>
+    </nz-modal>
+
+
+    <nz-modal [(nzVisible)]="isDispenseVisible" nzTitle="{{'app.lock.dispense' | translate}}" (nzOnCancel)="handleCancelDispense()" (nzOnOk)="dispenseLockOperator()">
+      <p>{{'app.lock.dispense.company' | translate}}</p>
+      <nz-select nzShowSearch nzAllowClear nzPlaceHolder="{{'validation.user.company.required' | translate}}" [(ngModel)] = "selectedDispenseCompany">
+        <nz-option nzWidth="80px" *ngFor="let o of companyList" [nzLabel]="o.text" [nzValue]="o.value"> </nz-option>
+      </nz-select>
+    </nz-modal>
+
+    <app-lock-draw [(visible)]="viewSidebar" [pageMode]="pageMode" [lockDetail]="selectedLockDetail" [companyList] = "companyList" (visibleChange)="onVisibleChange($event)">
+
+    </app-lock-draw>
+</div>
